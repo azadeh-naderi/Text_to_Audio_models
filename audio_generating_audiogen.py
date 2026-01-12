@@ -3,10 +3,11 @@ import torchaudio
 import torch
 from audiocraft.utils.notebook import display_audio
 
-
 !pip install -U git+https://git@github.com/facebookresearch/audiocraft#egg=audiocraft
-
 from audiocraft.models import AudioGen
+
+
+
 
 model = AudioGen.get_pretrained('facebook/audiogen-medium')
 
@@ -21,15 +22,15 @@ model.set_generation_params(
 
 
 
-def get_bip_bip(bip_duration=0.125, frequency=440,
-                duration=0.5, sample_rate=16000, device="cuda"):
+def get_bip_bip(bip_duration=0.125, frequency=440, duration=0.5, sample_rate=16000, device="cuda"):
     """Generates a series of bip bip at the given frequency."""
-    t = torch.arange(
-        int(duration * sample_rate), device="cuda", dtype=torch.float) / sample_rate
+    t = torch.arange(int(duration * sample_rate), device="cuda", dtype=torch.float) / sample_rate
     wav = torch.cos(2 * math.pi * 440 * t)[None]
     tp = (t % (2 * bip_duration)) / (2 * bip_duration)
     envelope = (tp >= 0.5).float()
     return wav * envelope
+
+
 
 # Here we use a synthetic signal to prompt the generated audio.
 res = model.generate_continuation(
