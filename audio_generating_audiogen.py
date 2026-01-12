@@ -5,8 +5,8 @@ from audiocraft.utils.notebook import display_audio
 
 !pip install -U git+https://git@github.com/facebookresearch/audiocraft#egg=audiocraft
 from audiocraft.models import AudioGen
-
-
+from audiocraft.utils.notebook import display_audio
+import IPython.display as ipd
 
 
 model = AudioGen.get_pretrained('facebook/audiogen-medium')
@@ -40,6 +40,8 @@ res = model.generate_continuation(
     progress=True)
 display_audio(res, 16000)
 
+
+
 # You can also use any audio from a file. Make sure to trim the file if it is too long!
 prompt_waveform, prompt_sr = torchaudio.load("../assets/sirens_and_a_humming_engine_approach_and_pass.mp3")
 prompt_duration = 2
@@ -47,7 +49,7 @@ prompt_waveform = prompt_waveform[..., :int(prompt_duration * prompt_sr)]
 output = model.generate_continuation(prompt_waveform, prompt_sample_rate=prompt_sr, progress=True)
 display_audio(output, sample_rate=16000)
 
-from audiocraft.utils.notebook import display_audio
+
 
 output = model.generate(
     descriptions=[
@@ -59,7 +61,7 @@ output = model.generate(
 
 display_audio(output, sample_rate=16000)
 
-from audiocraft.utils.notebook import display_audio
+
 
 output = model.generate(
     descriptions=[
@@ -79,12 +81,13 @@ output = model.generate(
 
 display_audio(output, sample_rate=16000)
 
+
 output = model.generate(
     descriptions=
         ['sound of hand saw' for _ in range(40)] , progress=True)
 #display_audio(output, sample_rate=16000)
 
-import IPython.display as ipd
+
 
 index = 1
 for audio_tensor in output:
@@ -96,10 +99,12 @@ for audio_tensor in output:
         f.write(myaudioobject.data)
     index += 1
 
+
 from google.colab import files
 
 num_audio_files = 40
 file_paths = [f"/content/hand_saw_index_{i}.wav" for i in range(1, num_audio_files + 1)]
+
 
 # Download each file
 for file_path in file_paths:
